@@ -26,3 +26,5 @@ class FilterParam(serializers.Serializer):
     to_date = serializers.CharField( required= False)
     group_by = serializers.CharField( required= False)
     extras = serializers.CharField( required= False)
+    limits = serializers.CharField( required= False)
+    desc = serializers.CharField( required= False)
