@@ -1,0 +1,58 @@
+# CLEAN DATA
+CREATE TABLE data_reports AS
+SELECT 
+# Workspace info
+IFNULL(workspace.code,'') as ws_code,
+# Employees info
+IFNULL(employee.code,'') as emp_code,
+IFNULL(CONCAT(employee.first_name,'.', employee.last_name),'') as emp_name,
+# Departments info
+IFNULL(department.code,'') as dept_code,
+IFNULL(department.name,'') as dept_name,
+# Customer info 
+IFNULL(customer.code,'') as cus_code,
+IFNULL(customer.name,'') as cus_name,
+# Opportunity info
+IFNULL(opportunity.code,'') as opt_code,
+IFNULL(opportunity.name,'') as opt_name,
+IFNULL(opportunity.decision_maker,'') as opt_descision_maker,
+IFNULL(opportunity.number_period,0) as opt_number_period,
+IFNULL(opportunity.budget,0) as opt_budget,
+IFNULL(opportunity.expect_profit,0) as opt_profit,
+IFNULL(opportunity.expect_revenue,0) as opt_expect_revenue,
+IFNULL(opportunity.commit_revenue,0) as opt_commit_revenue,
+IFNULL(opportunity.gross_profit,0) as opt_gross_profit,
+IF(opportunity.win_rate IS NULL,'0%',CONCAT(opportunity.win_rate,'%')) as opt_win_rate,
+IFNULL(DATE(opportunity.bid_open_date),'') as opt_bid_open_date,
+IFNULL(DATE(opportunity.bid_close_date),'') as opt_bid_close_date,
+IF(opportunity.status IS NULL,'0%',CONCAT(opportunity.status,'%')) as opt_status,
+IFNULL(opportunity.lost_reason,'') as opt_lost_reason,
+IFNULL(opportunity.opponent,'') as opt_opponent,
+# Salecontract info
+IFNULL(salecontract.code,'') as scon_code,
+IFNULL(contracttype.name,'') as scon_type_name,
+IFNULL(ctlinformation.contract_number,'') as scon_ct_number,
+IFNULL(salecontract.exchange_contract_value,0) as scon_ex_ct_value,
+IFNULL(DATE(ctlinformation.date_locked),'') as scon_date_locked,
+IFNULL(DATE(salecontract.posting_date),'') as scon_posting_date,
+IFNULL(DATE(salecontract.sign_date),'') as scon_sign_date,
+IFNULL(salecontract.cur_node_name,'') as scon_cur_node_name,
+IFNULL(salecontract.auditor_current,'') as scon_auditor_current,
+IF(salecontract.contract_status = 1,"Đã khóa","Chưa khóa") as scon_contract_status
+
+FROM saleorder_salecontract salecontract
+LEFT JOIN saleorder_contractlockinformation ctlinformation
+ON salecontract.id = ctlinformation.sale_contract_id
+LEFT JOIN saleorder_contracttype contracttype
+ON salecontract.contract_type_id = contracttype.id 
+LEFT JOIN crm_workspace workspace
+ON salecontract.workspace = workspace.id
+LEFT JOIN quotation_customer customer
+ON salecontract.customer_id =  customer.id
+LEFT JOIN employees_employee employee
+ON salecontract.employee_inherit = employee.id
+LEFT JOIN employees_department department
+ON employee.department_id = department.id  
+LEFT JOIN crm_opportunity opportunity 
+ON opportunity.id = workspace.opportunity
+ORDER BY scon_sign_date DESC;

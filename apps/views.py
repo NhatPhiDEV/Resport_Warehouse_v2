@@ -28,18 +28,24 @@ class ReportsViewSet(viewsets.ViewSet):
         limits = request.data.get('limits')
         desc = request.data.get('desc')
         # covert result
+        if group_by == 'NULL':
+            group_by_result = ''
         group_by_result = format_group_by(group_by=group_by,date_filter=date_filter)
         date_result = format_date_filter_follow_group_by(group_by=group_by,date_filter=date_filter)
         string_select_result  = f'{format_date(format_str(string_select,date_filter))},'
         number_selected_result = format_num(number_select=number_select,group_by=group_by)
         order_by_result = format_top(limits=limits,desc=desc,number_select=number_select,date_filter=date_filter)
         # SELECT query
-        selected = f'DISTINCT {number_selected_result}{string_select_result}{date_result}'
+        
+        if group_by in ['dept_code','emp_code','cus_code'] :
+            selected = f'DISTINCT {group_by}, {string_select_result}{date_result}{number_selected_result}'
+        else:
+            selected = f'DISTINCT {string_select_result}{date_result}{number_selected_result}'
         # WHERE query
         conditions = f"{extras} AND {date_filter} BETWEEN DATE('{from_date}') AND DATE('{to_date}') {group_by_result}{order_by_result}"
         # Format result and Render json
-        # print(selected)
-        # print(conditions)
+        print(selected)
+        print(conditions)
         result = dictFetchall(selected,conditions)
         return Response(result,status=status.HTTP_200_OK)        
 # Get data viewSet
@@ -77,14 +83,14 @@ def format_str(string_select,date_filter):
 # Format number select
 def format_num(number_select,group_by):
     temp = number_select.split(",")
-    result_temp = ''.join(f'Sum({value}) AS {value}, ' for value in temp)
+    result_temp = ''.join(f', Sum({value}) AS {value} ' for value in temp)
     # check number selected
     if number_select == 'NULL':
         return ''
     elif group_by != 'NULL':
         return result_temp
     else:
-        return f'{number_select},'
+        return f'{number_select}'
 # Format top
 def format_top(limits,desc,number_select,date_filter):
     if limits != 'NULL' and desc in['DESC','ASC']  and number_select != 'NULL':
@@ -121,7 +127,6 @@ def format_date_filter_follow_group_by(group_by,date_filter):
     else:
         return f' {date_filter}'
 
-
 def dictFetchall(params, conditions):
     with connection.cursor() as cursor:
         cursor.callproc(PROC_AUTOCOMPLETE_NAME,[params,conditions])
@@ -137,3 +142,4 @@ def renderData(cursor):
     return result
 
 
+ 
