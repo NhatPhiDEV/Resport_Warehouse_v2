@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 # AUTO COMPLETE TEXT
 PROC_AUTOCOMPLETE_NAME = "AutoComplete_Text"
+PROC_ALLCODE_NAME = "getAllcode"
 #1. DEPARTMENTS 
 DEPT_SELECT = "DISTINCT dept_code,dept_name"
 DEPT_WHERE  = "dept_name != '' AND dept_code != '' ORDER BY dept_name;" 
