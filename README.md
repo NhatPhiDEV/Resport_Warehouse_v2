@@ -17,17 +17,17 @@ Open [https://bom.so/3pPdcK] copy content file clean_data.txt and run file in my
 ## Change file setting
 
 DATABASES = { <br>
-&nbsp;'default': { <br>
-&nbsp;&nbsp;'ENGINE': 'django.db.backends.mysql', <br>
-&nbsp;&nbsp;'NAME': '{db name}', <br>
-&nbsp;&nbsp;'USER': '{username}', <br>
-&nbsp;&nbsp;'PASSWORD': '{password}', <br>
-&nbsp;&nbsp;'HOST': '{host}', <br>
-&nbsp;&nbsp;'PORT': '{port}', <br>
-&nbsp;&nbsp;'OPTIONS': { <br>
-&nbsp;&nbsp;&nbsp;'init_command':"SET sql_mode='STRICT_TRANS_TABLES'" <br>
-&nbsp;&nbsp;} <br>
-&nbsp;} <br>
+&emsp;'default': { <br>
+&emsp;&emsp;'ENGINE': 'django.db.backends.mysql', <br>
+&emsp;&emsp;'NAME': '{db name}', <br>
+&emsp;&emsp;'USER': '{username}', <br>
+&emsp;&emsp;'PASSWORD': '{password}', <br>
+&emsp;&emsp;'HOST': '{host}', <br>
+&emsp;&emsp;'PORT': '{port}', <br>
+&emsp;&emsp;'OPTIONS': { <br>
+&emsp;&emsp;&emsp;'init_command':"SET sql_mode='STRICT_TRANS_TABLES'" <br>
+&emsp;&emsp;} <br>
+&emsp;} <br>
 }
 
 ## Run code
